@@ -130,6 +130,7 @@ class Polyedr:
 
         # списки вершин, рёбер и граней полиэдра
         self.vertexes, self.edges, self.facets = [], [], [],
+        self.vertexes_n, self.edges_n = [], []
         self.c = 1.0
         # список строк файла
         with open(file) as f:
@@ -149,6 +150,8 @@ class Polyedr:
                 elif i < nv + 2:
                     # задание всех вершин полиэдра
                     x, y, z = (float(x) for x in line.split())
+                    x_n, y_n, z_n = x, y, z
+                    self.vertexes_n.append(R3(x, y, z))
                     self.vertexes.append(R3(x, y, z).rz(
                         self.alpha).ry(self.beta).rz(self.gamma) * c)
                 else:
@@ -158,9 +161,12 @@ class Polyedr:
                     size = int(buf.pop(0))
                     # массив вершин этой грани
                     vertexes = list(self.vertexes[int(n) - 1] for n in buf)
+                    vertexes_n = list(self.vertexes_n[int(n) - 1] for n in buf)
                     # задание рёбер грани
                     for n in range(size):
                         self.edges.append(Edge(vertexes[n - 1], vertexes[n]))
+                        self.edges_n.append(Edge(vertexes_n[n - 1],
+                                                 vertexes_n[n]))
                     # задание самой грани
                     self.facets.append(Facet(vertexes))
 
@@ -181,8 +187,9 @@ class Polyedr:
             flag = False
             for s in edge.gaps:
                 if len(edge.gaps) != 0 \
-                        and (approx(s.beg) != 0.0 or approx(s.fin) != 1.0) \
-                        and approx(s.beg) != approx(s.fin):
+                    and (not isclose(s.beg, 0.0, rel_tol=1e-9, abs_tol=1e-9) \
+                    or not isclose(s.fin, 1.0, rel_tol=1e-9, abs_tol=1e-9)) \
+                    and not isclose(s.beg, s.fin, rel_tol=1e-9, abs_tol=1e-9):
                     #print(s.beg, s.fin)
                     flag = True
 
@@ -194,15 +201,15 @@ class Polyedr:
                     or abs(center.y) > 0.5 \
                     or abs(center.z) > 0.5:
                     # Вычисляем длину видимой проекции ребра
-                    vidim = 0
+                    nevidim = 0
                     for s in edge.gaps:
                         dtx = edge.r3(s.fin).x - edge.r3(s.beg).x
                         dty = edge.r3(s.fin).y - edge.r3(s.beg).y
                         dtz = edge.r3(s.fin).z - edge.r3(s.beg).z
-                        vidim += (dtx ** 2 + dty ** 2 + dtz ** 2) ** 0.5
-                    sum_length += vidim
+                        nevidim += (dtx ** 2 + dty ** 2 + dtz ** 2) ** 0.5
+                    sum_length += nevidim
         
-        return round(sum_length, 2) 
+        return round(abs(sum_length), 2) 
 
     # Метод изображения полиэдра
     def draw(self, tk):  # pragma: no cover

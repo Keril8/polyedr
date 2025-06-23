@@ -130,7 +130,6 @@ class Polyedr:
 
         # списки вершин, рёбер и граней полиэдра
         self.vertexes, self.edges, self.facets = [], [], [],
-        self.vertexes_n, self.edges_n = [], []
         self.c = 1.0
         # список строк файла
         with open(file) as f:
@@ -150,8 +149,6 @@ class Polyedr:
                 elif i < nv + 2:
                     # задание всех вершин полиэдра
                     x, y, z = (float(x) for x in line.split())
-                    x_n, y_n, z_n = x, y, z
-                    self.vertexes_n.append(R3(x, y, z))
                     self.vertexes.append(R3(x, y, z).rz(
                         self.alpha).ry(self.beta).rz(self.gamma) * c)
                 else:
@@ -161,12 +158,9 @@ class Polyedr:
                     size = int(buf.pop(0))
                     # массив вершин этой грани
                     vertexes = list(self.vertexes[int(n) - 1] for n in buf)
-                    vertexes_n = list(self.vertexes_n[int(n) - 1] for n in buf)
                     # задание рёбер грани
                     for n in range(size):
                         self.edges.append(Edge(vertexes[n - 1], vertexes[n]))
-                        self.edges_n.append(Edge(vertexes_n[n - 1],
-                                                 vertexes_n[n]))
                     # задание самой грани
                     self.facets.append(Facet(vertexes))
 

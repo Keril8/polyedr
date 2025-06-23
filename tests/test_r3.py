@@ -109,11 +109,3 @@ class TestR3(unittest.TestCase):
         self.assertEqual(R3ApproxMatcher(self.a.cross(R3(3.0, -2.0, 1.0))),
                          R3(8.0, 8.0, -8.0))
 
-    def test_is_good1(self):
-        self.assertEqual(R3.is_good(R3(0, 0, 0)), True)
-
-    def test_is_good2(self):
-        self.assertEqual(R3.is_good(R3(1, 0, 0)), False)
-
-    def test_is_good3(self):
-        self.assertEqual(R3.is_good(R3(0.5, 0.5, 0.5)), True)

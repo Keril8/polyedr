@@ -113,7 +113,7 @@ class TestPolyedr3(unittest.TestCase):
     def test_num_edges(self):
         self.assertEqual(len(self.polyedr.edges), 8)
     
-    def test_planes_1(self):
+    def test_planes_2(self):
         self.assertEqual(self.polyedr.calculate(), 400.0)
 
 class TestPolyedr4(unittest.TestCase):
@@ -150,5 +150,5 @@ class TestPolyedr4(unittest.TestCase):
     def test_num_edges(self):
         self.assertEqual(len(self.polyedr.edges), 8)
     
-    def test_planes_1(self):
+    def test_planes_3(self):
         self.assertEqual(self.polyedr.calculate(), 20.0)

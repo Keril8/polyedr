@@ -194,15 +194,15 @@ class Polyedr:
                     or abs(center.y) > 0.5 \
                     or abs(center.z) > 0.5:
                     # Вычисляем длину видимой проекции ребра
-                    nevidim = 0
+                    vidim = 0
                     for s in edge.gaps:
                         dtx = edge.r3(s.fin).x - edge.r3(s.beg).x
                         dty = edge.r3(s.fin).y - edge.r3(s.beg).y
                         dtz = edge.r3(s.fin).z - edge.r3(s.beg).z
-                        nevidim += (dtx ** 2 + dty ** 2 + dtz ** 2) ** 0.5
-                    sum_length += nevidim
+                        vidim += (dtx ** 2 + dty ** 2 + dtz ** 2) ** 0.5
+                    sum_length += vidim
         
-        return round(abs(sum_length), 2) 
+        return round(sum_length, 2) 
 
     # Метод изображения полиэдра
     def draw(self, tk):  # pragma: no cover
